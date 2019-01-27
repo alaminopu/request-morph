@@ -644,6 +644,26 @@ local function transform_method(conf)
 end
 
 
+local function transform_path(conf)
+  if not conf.path then
+    return
+  end
+
+  -- get request params 
+  requestParams = string.gmatch(conf.path, "<(.-)>")
+
+  local url
+
+  -- replace request params
+  for param in requestParams do
+    local requestParamValue = ngx.ctx.router_matches.uri_captures[param]
+    url = url:gsub("<" .. param .. ">", requestParamValue)
+  end
+  
+  return url
+end 
+
+
 function _M.execute(conf)
   transform_headers(conf)
 
@@ -651,6 +671,9 @@ function _M.execute(conf)
 
   transform_query(conf, query)
   transform_body(conf, body_raw)
+
+  -- transform uri path
+  ngx.var.upstream_uri = transform_path(conf)
 end
 
 
