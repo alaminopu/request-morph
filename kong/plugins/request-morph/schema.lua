@@ -43,6 +43,7 @@ return {
         type = "record",
         fields = {
           { http_method = typedefs.http_method },
+          { path = typedefs.path },
           { remove  = strings_array_record },
           { rename  = colon_strings_array_record },
           { replace = colon_strings_array_record },
